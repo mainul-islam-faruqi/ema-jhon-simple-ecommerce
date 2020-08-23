@@ -1,0 +1,7 @@
+.header{
+    display: flex;
+    justify-content: center;
+}
+.header img{
+    height: 80px;
+}
