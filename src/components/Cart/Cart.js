@@ -11,11 +11,37 @@ const Cart = (props) => {
         total += product.price;
     }
 
+    let shipping = 0;
+    if (total<35){
+        shipping = 0;
+    }
+    else if (total<99.99){
+        shipping = 8;
+    }
+    else if (total<499.99){
+        shipping = 12.99;
+    }
+    else{
+        shipping= 20;
+    }
+
+    const tax = total/10;
+
+    const grandTotal =  total + shipping + tax ;
+
+    function formatNumber(num){
+        const precision = num.toFixed(2);
+        return Number(precision);
+    }
+
     return (
         <div>
             <h4>Order Summary</h4>
             <h5> Items Ordered: {cart.length}</h5>
-            <p>Total Price: {total} </p>
+            <p>Product Price: {formatNumber(total)} </p>
+            <p><small> Shipping Cost: {formatNumber(shipping)} </small></p>
+            <p><small> Tax+VAT: {formatNumber(tax)} </small></p>
+            <p>Total Price: {formatNumber(grandTotal)} </p>
         </div>
     );
 };
