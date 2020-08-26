@@ -2,19 +2,51 @@
     text-align: center;
 }
 .header img{
-    height: 80px;
+    height: 5rem;
 }
 .header nav{
     background-color: black;
     line-height: 2.5rem;
-    font-size: 1.4rem;
+    font-size: 1.4rem;  
 }
 nav a{
     color: white;
     text-decoration: none;
-    margin-right: 20px;
     padding: 5px;
 }
 nav a:hover{
     background-color: gray;
 }
+@media only screen and (max-width: 825px){
+    .header nav{
+        display:flex;
+        justify-content: center;
+        width: 100%;
+        padding-right:150px;
+    }
+}
+
+@media only screen and (max-width: 548px){
+    .header nav{
+        display:flex;
+        justify-content: center;
+        
+    }
+}
+
+@media only screen and (max-width: 380px) {
+    nav{
+       display:flex;
+       flex-direction: column;
+       width: 100%;
+       padding-right: 100px;
+       
+   }
+   .header{
+       text-align: center;
+   }
+   .header img{
+    height: 3rem;
+    
+}
+  }

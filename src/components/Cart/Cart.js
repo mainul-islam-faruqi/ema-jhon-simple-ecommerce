@@ -35,7 +35,7 @@ const Cart = (props) => {
     }
 
     return (
-        <div>
+        <div style={{textAlign:"center"}}>
             <h4>Order Summary</h4>
             <h5> Items Ordered: {cart.length}</h5>
             <p>Product Price: {formatNumber(total)} </p>
