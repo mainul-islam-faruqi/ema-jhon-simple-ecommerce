@@ -5,11 +5,17 @@ const Cart = (props) => {
     const cart = props.cart;
     // const total = cart.reduce((total,product)=> total+product.price ,0)
 
+    function formatNumber(num){
+        const precision = num.toFixed(2);
+        return Number(precision);
+    }
+
     let total = 0;
     for(let i = 0; i<cart.length; i++){
         const product = cart[i];
         // total = total + product.price;
-        total += product.price;
+        total = total + product.price * product.quantity;
+
     }
 
     let shipping = 0;
@@ -30,10 +36,8 @@ const Cart = (props) => {
 
     const grandTotal =  total + shipping + tax ;
 
-    function formatNumber(num){
-        const precision = num.toFixed(2);
-        return Number(precision);
-    }
+
+    
 
     return (
         <div style={{textAlign:"center"}}>
