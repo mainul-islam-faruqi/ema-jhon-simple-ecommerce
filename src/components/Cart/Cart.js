@@ -47,7 +47,9 @@ const Cart = (props) => {
             <p><small> Shipping Cost: {formatNumber(shipping)} </small></p>
             <p><small> Tax+VAT: {formatNumber(tax)} </small></p>
             <p>Total Price: {formatNumber(grandTotal)} </p>
-            <Link to="/review"><button className="main-button"> Review</button></Link>
+           {
+               props.children
+           }
         </div>
     );
 };
