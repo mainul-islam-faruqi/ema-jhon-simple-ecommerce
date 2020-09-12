@@ -15,6 +15,7 @@ const Review = () => {
         setCart([])
         setOrderPlaced(true)
         processOrder()
+        history.push('/shipment')
     }
 
     const removeItem = productKey =>{
