@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useState } from 'react';
 import { UserContext } from '../../App';
 import { useHistory, useLocation } from 'react-router-dom';
-import { initializeLoginFramework, handleGoogleSignIn, handleSignOut, handleFbSignIn } from './loginManager';
+import { initializeLoginFramework, handleGoogleSignIn, handleSignOut, handleFbSignIn, createUserWithEmailAndPassword, signInWithEmailAndPassword } from './loginManager';
 
 
 const Login = () => {
@@ -52,13 +52,23 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         if( newUser && user.name && user.password){
-           
+          createUserWithEmailAndPassword(user.name, user.email, user.password)
+          .then(res => {
+            setUser(res);
+            setLoggedInUser(res);
+            history.replace(from);
+          })
         }
         if(!newUser && user.email && user.password){
-          
-        }
-        e.preventDefault();
-    };
+          signInWithEmailAndPassword(user.email, user.password)
+          .then(res => {
+            setUser(res);
+            setLoggedInUser(res);
+            history.replace(from);
+          })
+    }
+    e.preventDefault();
+    }
 
     const handleBlur = (e) => {
         let isFieldValid = true;
