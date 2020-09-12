@@ -62,6 +62,7 @@ const Login = () => {
               newUserInfo.error = "";
               newUserInfo.success = true;
               setUser(newUserInfo);
+              updateUserInfo(user.name);
             })
             .catch(error=> {
                 // Handle Errors here.
@@ -79,6 +80,7 @@ const Login = () => {
               newUserInfo.error = "";
               newUserInfo.success = true;
               setUser(newUserInfo);
+              console.log(res.user)
           })
           .catch(function(error) {
             // Handle Errors here.
@@ -109,6 +111,18 @@ const Login = () => {
 
         }
     };
+
+    const updateUserInfo = (name)=>{
+      const user = firebase.auth().currentUser;
+
+      user.updateProfile({
+        displayName: name,
+      }).then(function() {
+        // Updated successful.
+      }).catch(function(error) {
+        console.log(error);
+      });
+    }
     return (
         <div style={{textAlign: 'center'}}>
             <h1> Our own Authentication</h1>
@@ -124,7 +138,7 @@ const Login = () => {
                 <br/>
                 <input type="password" onBlur={handleBlur} name="password"  placeholder="Your password" required id=""/>
                 <br/>
-                <input type="submit" onChange={handleSubmit} value="Submit"/>
+                <input type="submit" onChange={handleSubmit} value={newUser?'Sign Up':'Sign In'} />
             </form>
             <p style={{color: 'red'}}> {user.error} </p>
             {user.success && <p style={{color: 'green'}}> User {newUser?'created': "logged In"} successfully </p>}
