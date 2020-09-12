@@ -1,5 +1,10 @@
 import React from 'react';
 import { useState } from 'react';
+import * as firebase from "firebase/app";
+import "firebase/auth";
+
+import firebaseConfig from './firebase.config';
+firebase.initializeApp(firebaseConfig);
 
 const Login = () => {
     const [user, setUser] = useState({
@@ -10,22 +15,67 @@ const Login = () => {
         photo: '',
     })
 
-    const handleSubmit = (e) => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  const handleSignIn  = () => {
+    firebase.auth().signInWithPopup(provider)
+    .then((result) => {
+      var token = result.credential.accessToken;
+      var {displayName,email,photoURL} = result.user;
 
+      const signInUser = {
+        isSignedIn: true,
+        name: displayName,
+        email: email,
+        photo:photoURL
+      }
+
+      setUser(signInUser);
+    })
+
+  }
+
+  const handleSignOut = () => {
+    firebase.auth().signOut()
+     .then((result) => {
+      const signedOutUser = {
+        isSignedIn: false,
+        name: '',
+        email: '',
+        photo: '',
+      }
+      setUser(signedOutUser);
+     })
+     .catch((error) => {
+       console.log(error)
+     })
+     
+  }
+
+    const handleSubmit = (e) => {
+        if(user.name && user.password){
+            firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+            .catch(function(error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(errorCode, errorMessage)
+              });
+        }
+        e.preventDefault();
     };
 
     const handleBlur = (e) => {
-        let isFormValid = true;
+        let isFieldValid = true;
         if(e.target.name === "email") {
-            isFormValid = /\S+@\S+\.\S+/.test(e.target.value);
+            isFieldValid = /\S+@\S+\.\S+/.test(e.target.value);
 
         }
         if(e.target.name === "password") {
             const isPasswordValid = e.target.value.length > 6;
             const passwordHasNumber = /\d{1}/.test(e.target.value);
-            isFormValid = isPasswordValid && passwordHasNumber;
+            isFieldValid = isPasswordValid && passwordHasNumber;
         }
-        if(isFormValid){
+        if(isFieldValid){
             const newUserInfo = {...user};
             newUserInfo[e.target.name] = e.target.value;
             setUser(newUserInfo);
