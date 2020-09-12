@@ -7,6 +7,7 @@ import firebaseConfig from './firebase.config';
 firebase.initializeApp(firebaseConfig);
 
 const Login = () => {
+    const [newUser, setnewUser] = useState(false);
     const [user, setUser] = useState({
         isSignedIn:false,
         name: '',
@@ -54,7 +55,7 @@ const Login = () => {
   }
 
     const handleSubmit = (e) => {
-        if(user.name && user.password){
+        if( newUser && user.name && user.password){
             firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
             .then(res =>{
               const newUserInfo = {...user};
@@ -70,6 +71,22 @@ const Login = () => {
                 setUser(newUserInfo);
                 
               });
+        }
+        if(!newUser && user.email && user.password){
+          firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+          .then(res=>{
+            const newUserInfo = {...user};
+              newUserInfo.error = "";
+              newUserInfo.success = true;
+              setUser(newUserInfo);
+          })
+          .catch(function(error) {
+            // Handle Errors here.
+            const newUserInfo = {...user}
+            newUserInfo.error = error.message;
+            newUserInfo.success = false;
+            setUser(newUserInfo);
+          });
         }
         e.preventDefault();
     };
@@ -93,13 +110,15 @@ const Login = () => {
         }
     };
     return (
-        <div style={{display:"flex", flexDirection:"column",alignItems: "center"}}>
+        <div style={{textAlign: 'center'}}>
             <h1> Our own Authentication</h1>
             {/* <p> Name: {user.name}</p>
             <p> Email: {user.email}</p>
             <p> Password: {user.password}</p> */}
+            <input type="checkbox" name="newUser" onChange={()=>setnewUser(!newUser)} id=""/><label htmlFor="newUser"> New User Sign Up</label>
+           
             <form onSubmit={handleSubmit}>
-                <input type="text" onBlur={handleBlur} name="name" placeholder="Your name"/>
+                {newUser && <input type="text" onBlur={handleBlur} name="name" placeholder="Your name"/>}
                 <br/>
                 <input type="text" onBlur={handleBlur} name="email" placeholder="Your Email Adress" required/>
                 <br/>
@@ -108,7 +127,7 @@ const Login = () => {
                 <input type="submit" onChange={handleSubmit} value="Submit"/>
             </form>
             <p style={{color: 'red'}}> {user.error} </p>
-            {user.success && <p style={{color: 'green'}}> User created successfully </p>}
+            {user.success && <p style={{color: 'green'}}> User {newUser?'created': "logged In"} successfully </p>}
         </div>
     );
 };
