@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useState } from 'react';
 import { UserContext } from '../../App';
 import { useHistory, useLocation } from 'react-router-dom';
-import { initializeLoginFramework, handleGoogleSignIn, handleSignOut, handleFbSignIn, createUserWithEmailAndPassword, signInWithEmailAndPassword } from './loginManager';
+import { initializeLoginFramework, handleGoogleSignIn, handleSignOut, handleFbSignIn, createUserWithEmailAndPassword, signInWithEmailAndPassword, resetPassword } from './loginManager';
 
 
 const Login = () => {
@@ -118,6 +118,7 @@ const Login = () => {
                 <br/>
                 <input type="submit" onChange={handleSubmit} value={newUser?'Sign Up':'Sign In'} />
             </form>
+            <button onClick={()=>resetPassword(user.email)}> Forget or Reset Password</button>
             <p style={{color: 'red'}}> {user.error} </p>
             {user.success && <p style={{color: 'green'}}> User {newUser?'created': "logged In"} successfully </p>}
         </div>
