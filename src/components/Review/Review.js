@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
-import {getDatabaseCart, removeFromDatabaseCart, processOrder} from '../../utilities/databaseManager';
+import React, { useEffect, useState } from 'react';
+import { getDatabaseCart, removeFromDatabaseCart, processOrder } from '../../utilities/databaseManager';
 import fakeData from '../../fakeData';
 import ReviewItem from '../ReviewItem/ReviewItem';
 import Cart from '../Cart/Cart';
+import happyImage from '../../images/giphy.gif';
 import { useHistory } from 'react-router-dom';
 
 const Review = () => {
@@ -11,46 +11,48 @@ const Review = () => {
     const [orderPlaced, setOrderPlaced] = useState(false);
     const history = useHistory()
 
-    const handlePlaceCheckout = () => {
-        setCart([])
-        setOrderPlaced(true)
-        processOrder()
-        history.push('/shipment')
+    const handleProceedCheckout = () => {
+        history.push('/shipment');
     }
 
-    const removeItem = productKey =>{
+    const removeProduct = (productKey) => {
         const newCart = cart.filter(pd => pd.key !== productKey);
         setCart(newCart);
         removeFromDatabaseCart(productKey);
-    };
-
-    useEffect(()=>{
-        const saveCart = getDatabaseCart();
-        const productKeys = Object.keys(saveCart);
-        
-        const cartProduct = productKeys.map(key =>{
-            const product = fakeData.find(pd => pd.key === key);
-             product.quantity = saveCart[key];
-             return product;
-        })
-        setCart(cartProduct);
-    },[])
-    let thankyou;
-    if (orderPlaced){
-        thankyou = <img src="../../images/giphy.gif" alt=""/>
     }
 
+    useEffect(()=>{
+        //cart
+        const savedCart = getDatabaseCart();
+        const productKeys = Object.keys(savedCart);
+
+        const cartProducts =  productKeys.map( key => {
+            const product = fakeData.find( pd => pd.key === key);
+            product.quantity = savedCart[key];
+            return product;
+        });
+        setCart(cartProducts);
+    }, []);
+
+    let thankyou;
+    if(orderPlaced){
+        thankyou = <img src={happyImage} alt=""/>
+    } 
     return (
-        <div className="shop-container">
+        <div className="twin-container">
             <div className="product-container">
-            {cart.map(pd=><ReviewItem product={pd} removeItem={removeItem} ></ReviewItem>)}
-            {thankyou}
+                {
+                    cart.map(pd => <ReviewItem 
+                        key={pd.key}
+                        removeProduct = {removeProduct}
+                        product={pd}></ReviewItem>)
+                }
+                { thankyou }
             </div>
-            <div className="cart-contianer">
-               <Cart cart={cart} >
-               <button className="main-button" onClick={handlePlaceCheckout}> Proceed Checkout </button>
-               </Cart>
-               
+            <div className="cart-container">
+                <Cart cart={cart}>
+                    <button onClick={handleProceedCheckout} className="main-button">Proceed Checkout</button>
+                </Cart>
             </div>
         </div>
     );

@@ -5,11 +5,11 @@ import Product from '../Product/Product';
 
 const ProductDetail = () => {
     const {productKey} = useParams();
-    const product = fakeData.find(pd=>pd.key === productKey);
-
+    const product = fakeData.find(pd => pd.key === productKey);
+    
     return (
         <div>
-            <h1>  Product Details:  </h1>
+            <h1>Your Product Details.</h1>
             <Product showAddToCart={false} product={product}></Product>
         </div>
     );
