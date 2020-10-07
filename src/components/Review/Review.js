@@ -36,12 +36,6 @@ const Review = () => {
         .then(res => res.json())
         .then(data => setCart(data))
 
-        // const cartProducts =  productKeys.map( key => {
-        //     const product = fakeData.find( pd => pd.key === key);
-        //     product.quantity = savedCart[key];
-        //     return product;
-        // });
-        // setCart(cartProducts);
     }, []);
 
     let thankyou;
