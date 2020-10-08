@@ -11,12 +11,13 @@ const Shop = () => {
     //const first10 = fakeData.slice(0,10);
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
+    const [search, setSearch] = useState('');
 
     useEffect(()=> {
-        fetch('http://localhost:5000/products')
+        fetch('http://localhost:5000/products?search='+search)
         .then(res => res.json())
         .then(data => setProducts(data))
-    }, [])
+    }, [search])
     
     useEffect(()=>{
         const savedCart = getDatabaseCart();
@@ -32,6 +33,10 @@ const Shop = () => {
         .then(data => setCart(data))
 
     }, [])
+
+    const handleSearch = e => {
+        setSearch(e.target.value);
+    }
 
     const handleAddProduct = (product) =>{
         const toBeAddedKey = product.key;
@@ -55,6 +60,8 @@ const Shop = () => {
     return (
         <div className="twin-container">
             <div className="product-container">
+
+                <input type="text" onBlur={handleSearch}  placeholder="search product" />
                 {
                     products.length === 0 && <CircularProgress />
                 }
