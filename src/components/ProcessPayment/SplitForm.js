@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import './style.css';
 import {
   useStripe,
@@ -35,10 +35,13 @@ const useOptions = () => {
   return options;
 };
 
-const SplitForm = () => {
+const SplitForm = ({handlePayment}) => {
   const stripe = useStripe();
   const elements = useElements();
   const options = useOptions();
+
+  const [ paymentError, setPaymentError] = useState(null);
+  const [ paymentSuccess, setPaymentSuccess] = useState(null);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -53,6 +56,16 @@ const SplitForm = () => {
       type: "card",
       card: elements.getElement(CardNumberElement)
     });
+    
+
+    if(payload.error){
+        setPaymentError(payload.error.message);
+        setPaymentSuccess(null);
+    }else{
+        setPaymentSuccess(payload.paymentMethod.id);
+        setPaymentError(null);
+        handlePayment(payload.paymentMethod.id)
+    }
     console.log("[PaymentMethod]", payload);
   };
 
@@ -118,6 +131,9 @@ const SplitForm = () => {
       <button type="submit" disabled={!stripe}>
         Pay
       </button>
+
+      { paymentError && <p style={{color: 'red'}}> {paymentError}</p>}
+      { paymentSuccess && <p style={{color: 'green'}}>  Your Payment was successful  </p>}
     </form>
   );
 };
